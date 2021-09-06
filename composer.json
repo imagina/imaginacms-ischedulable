@@ -29,7 +29,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Modules\\Ishedulable\\Providers\\IschedulableServiceProvider"
+                "Modules\\Ischedulable\\Providers\\IschedulableServiceProvider"
             ],
             "aliases": {
                 
