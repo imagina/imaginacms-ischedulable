@@ -4,6 +4,16 @@ Polymorphic module to relate a schedule entity
 
 > To use, Run migrations and seeds.
 
+## Install
+```bash
+composer require imagina/ischedulable-module=v8.x-dev
+```
+
+## Enable the module
+```bash
+php artisan module:enable Ischedulable
+```
+
 ## Traits
 
 - ## schedulable
