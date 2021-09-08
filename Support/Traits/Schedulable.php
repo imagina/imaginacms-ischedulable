@@ -30,7 +30,7 @@ trait Schedulable
   public function syncSchedules($params)
   {
     //Get schedules from parameters
-    $schedules = isset($params['data']['schedules']) ? $params['data']['schedules'] : $params;
+    $schedules = isset($params['data']['schedules']) ? $params['data']['schedules'] : [];
     //Delete all schedules
     $this->schedules()->forceDelete();
     //Add new schedules
