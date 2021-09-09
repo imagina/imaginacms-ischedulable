@@ -22,6 +22,11 @@ trait Schedulable
       //Sync Schedules
       $model->syncSchedules($model->getEventBindings('updatedWithBindings'));
     });
+    //Listen event after delete model
+    static::deleted(function ($model) {
+      //Delete schedule
+      $model->schedule()->delete();
+    });
   }
 
   /**
