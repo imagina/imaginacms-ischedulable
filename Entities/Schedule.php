@@ -68,6 +68,8 @@ class Schedule extends CrudModel
             $wtShift = array_merge($wtShift, ['calendarDate' => $startDate->toDateString(), 'isBusy' => 0, 'busyBy' => null]);
             //Check if shift is busy
             foreach (($params['busyShifts'] ?? []) as $bsShift) {
+              $isBusy = false;//Instance is busy
+
               //Check de calendarDate are the same
               if ($startDate->toDateString() == $bsShift['calendarDate']) {
                 ksort($bsShift);//sort busy shift
@@ -86,7 +88,6 @@ class Schedule extends CrudModel
 
                 //Set busy data to workTime shift
                 if ($isBusy ?? false) $wtShift = array_merge($wtShift, ['isBusy' => 1, 'busyBy' => $bsShift]);
-
               }
             }
             //Sort workTime shift
