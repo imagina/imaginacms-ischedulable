@@ -44,17 +44,18 @@ class WorkTime extends CrudModel
   /**
    * Return shifts in intervals
    */
-  public function getShifts()
+  public function getShifts($params = [])
   {
     $response = [];//Default response
     $modelRelations = $this->getRelations();//Get model relations
     $startTime = Time::parse($this->start_time);// Parse start Time
     $endTime = Time::parse($this->end_time);// Parse end time
+    $shiftTime = $params['shiftTime'] ?? $this->shiftTime ?? 45;
 
     //Only if endTime is greater then startThan generate shifts
     if ($endTime->greaterThan($startTime)) {
       $startShiftTime = $startTime->copy();// Instance startShiftTime
-      $endShiftTime = $startTime->copy()->addMinutes($this->shift_time);// instance endShiftTime
+      $endShiftTime = $startTime->copy()->addMinutes($shiftTime);// instance endShiftTime
       //generate shifts
       while ($endTime->greaterThanOrEqualTo($endShiftTime)) {
         // Instance shift data
@@ -73,7 +74,7 @@ class WorkTime extends CrudModel
         //Replace startShiftTime with endShiftTime
         $startShiftTime = $endShiftTime->copy();
         //Add shifTime to endShiftTime
-        $endShiftTime->addMinutes($this->shift_time);
+        $endShiftTime->addMinutes($shiftTime);
       }
     }
 

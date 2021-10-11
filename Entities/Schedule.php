@@ -63,7 +63,7 @@ class Schedule extends CrudModel
         $workTimesToDay = $workTimes->where('day_id', ($startDate->dayOfWeek ? $startDate->dayOfWeek : 7));
         //Get shift by workTime and set current startDate
         foreach ($workTimesToDay as $workTime) {
-          foreach ($workTime->getShifts() as $wtShift) {
+          foreach ($workTime->getShifts(['shiftTime' => ($params['shiftTime'] ?? null)]) as $wtShift) {
             //Set extra data to workTime Shift
             $wtShift = array_merge($wtShift, ['calendarDate' => $startDate->toDateString(), 'isBusy' => 0, 'busyBy' => null]);
             //Check if shift is busy
