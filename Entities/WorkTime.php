@@ -42,7 +42,7 @@ class WorkTime extends CrudModel
   }
 
   /**
-   * Return shifts in intervals
+   * Return shifts by intervals
    */
   public function getShifts($params = [])
   {
@@ -50,27 +50,34 @@ class WorkTime extends CrudModel
     $modelRelations = $this->getRelations();//Get model relations
     $startTime = Time::parse($this->start_time);// Parse start Time
     $endTime = Time::parse($this->end_time);// Parse end time
-    $shiftTime = $params['shiftTime'] ?? $this->shiftTime ?? 45;
+    $shiftTime = $params['shiftTime'] ?? $this->shiftTime ?? 30;
+
+    //Instance time range allowed to generate shifts
+    $startAllowedRange = isset($params['timeRange'][0]) ? Time::parse($params['timeRange'][0]) : Time::parse('00:00:00');
+    $endAllowedRange = isset($params['timeRange'][1]) ? Time::parse($params['timeRange'][1]) : Time::parse('23:59:59');
 
     //Only if endTime is greater then startThan generate shifts
-    if ($endTime->greaterThan($startTime)) {
+    if ($endTime->greaterThan($startTime) && $endAllowedRange->greaterThan($startAllowedRange)) {
       $startShiftTime = $startTime->copy();// Instance startShiftTime
       $endShiftTime = $startTime->copy()->addMinutes($shiftTime);// instance endShiftTime
       //generate shifts
       while ($endTime->greaterThanOrEqualTo($endShiftTime)) {
-        // Instance shift data
-        $shift = [
-          'scheduleId' => $this->schedule_id,
-          'dayId' => $this->day_id,
-          'startTime' => $startShiftTime->totimeString(),
-          'endTime' => $endShiftTime->totimeString(),
-        ];
-        //Add day relation if exist to shift
-        if (isset($modelRelations['day'])) $shift['day'] = $modelRelations['day'];
-        // Sort shits
-        ksort($shift);
-        //Add shift to response
-        $response[] = $shift;
+        //Check if shift is into allowed range time
+        if ($startShiftTime->greaterThanOrEqualTo($startAllowedRange) && $endShiftTime->lessThanOrEqualTo($endAllowedRange)) {
+          // Instance shift data
+          $shift = [
+            'scheduleId' => $this->schedule_id,
+            'dayId' => $this->day_id,
+            'startTime' => $startShiftTime->totimeString(),
+            'endTime' => $endShiftTime->totimeString(),
+          ];
+          //Add day relation if exist to shift
+          if (isset($modelRelations['day'])) $shift['day'] = $modelRelations['day'];
+          // Sort shits
+          ksort($shift);
+          //Add shift to response
+          $response[] = $shift;
+        }
         //Replace startShiftTime with endShiftTime
         $startShiftTime = $endShiftTime->copy();
         //Add shifTime to endShiftTime
