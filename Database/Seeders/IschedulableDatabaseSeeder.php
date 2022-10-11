@@ -15,6 +15,7 @@ class IschedulableDatabaseSeeder extends Seeder
    */
   public function run()
   {
+    $this->call(IschedulableModuleTableSeeder::class);
     $this->call(DaysDatabaseSeeder::class);
   }
 }
