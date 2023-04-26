@@ -19,7 +19,7 @@ class IschedulableDatabaseSeeder extends Seeder
     Model::unguard();
     ProcessSeeds::dispatch([
       "baseClass" => "\Modules\Ischedulable\Database\Seeders",
-      "seeds" => ["DaysDatabaseSeeder"]
+      "seeds" => ["IschedulableModuleTableSeeder", "DaysDatabaseSeeder"]
     ]);
   }
 }
