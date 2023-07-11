@@ -8,6 +8,7 @@ use Modules\Core\Traits\CanPublishConfiguration;
 use Modules\Core\Events\BuildingSidebar;
 use Modules\Core\Events\LoadingBackendTranslations;
 use Modules\Ischedulable\Listeners\RegisterIschedulableSidebar;
+use Illuminate\Support\Facades\Blade;
 
 class IschedulableServiceProvider extends ServiceProvider
 {
@@ -47,6 +48,8 @@ class IschedulableServiceProvider extends ServiceProvider
         $this->mergeConfigFrom($this->getModuleConfigFilePath('ischedulable', 'permissions'), "asgard.ischedulable.permissions");
 
         //$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+
+      $this->registerComponents();
     }
 
     /**
@@ -104,5 +107,12 @@ class IschedulableServiceProvider extends ServiceProvider
 
     }
 
+  /**
+   * Register Blade components
+   */
+
+  private function registerComponents(){
+    Blade::componentNamespace("Modules\Ischedulable\View\Components", 'ischedulable');
+  }
 
 }
