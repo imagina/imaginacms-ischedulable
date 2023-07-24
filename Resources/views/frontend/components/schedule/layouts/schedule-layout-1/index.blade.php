@@ -13,25 +13,21 @@
           </div>
         @endif
         @if (!is_null($groupSchedule))
-          <div class="schedule-group">
-            <div class="days-schedule text-center">
-              {{$groupSchedule["openDay"]." ".$symbolToUniteDays." ".$groupSchedule["closeDay"]}}
+          @foreach($groupSchedule as $schedule)
+            <div class="schedule-day">
+              <div class="day-schedule text-center">
+                @if($schedule['minDay'] == $schedule['maxDay'])
+                  {{$schedule['minDay']}}
+                @else
+                  {{$schedule["minDay"]." ".$symbolToUniteDays." ".$schedule["maxDay"]}}
+                @endif
+              </div>
+              <div class="hours-schedule text-center pb-2">
+                {{$schedule['openHour']." ".$symbolToUniteHours." ".$schedule['closeHour']}}
+              </div>
             </div>
-            <div class="hours-schedule text-center pb-2">
-              {{$groupSchedule["openHour"]." ".$symbolToUniteHours." ".$groupSchedule["closeHour"]}}
-            </div>
-          </div>
+          @endforeach
         @endif
-        @foreach($daySchedule as $schedule)
-          <div class="schedule-day">
-            <div class="day-schedule text-center">
-              {{$schedule['day']}}
-            </div>
-            <div class="hours-schedule text-center pb-2">
-              {{$schedule['openHour']." ".$symbolToUniteHours." ".$schedule['closeHour']}}
-            </div>
-          </div>
-        @endforeach
       </div>
     </div>
   </div>
