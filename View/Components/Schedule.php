@@ -29,7 +29,9 @@ class Schedule extends Component
                               $title = 'Horarios De Atención', $description = null, $withTitle = false,
                               $withDescription = false)
   {
-    $this->item = $item ?? setting('ischedulable::siteSchedule') ?? [];
+    $this->item = $item ?? json_decode(setting('ischedulable::siteSchedule')) ?? [];
+    $this->item->workTimes = (collect($this->item->workTimes));
+    $this->item->workTimes = $this->item->workTimes->sortBy("dayId");
     $this->layout = $layout;
     $this->view = $view ?? "ischedulable::frontend.components.schedule.layouts.{$this->layout}.index";
     $this->formatHour = $formatHour ?? 'g:i a';
@@ -44,32 +46,42 @@ class Schedule extends Component
     $groupedDays = [];
     $dayGroup = null;
 
-    if (isset($this->item->schedules)) {
-      foreach ($this->item->schedules as $day) {
-        if (!empty($day->schedules)) {
-          $dateOpen = strtotime($day->schedules[0]->from);
-          $openHour = date($this->formatHour, $dateOpen);
-          $dateClose = strtotime($day->schedules[0]->to);
-          $closeHour = date($this->formatHour, $dateClose);
-          $currentDay = $day->iso;
+    if (isset($this->item->workTimes)) {
+      foreach ($this->item->workTimes as $day) {
+        $dateOpen = strtotime($day->startTime);
+        $openHour = date($this->formatHour, $dateOpen);
+        $dateClose = strtotime($day->endTime);
+        $closeHour = date($this->formatHour, $dateClose);
+        $currentDay = $day->dayId;
 
-          if ($dayGroup !== null && $openHour === $dayGroup['openHour']
-            && $closeHour === $dayGroup['closeHour'] && $groupDays) {
-            // Agrupar con el día anterior
-            $groupedDays[count($groupedDays) - 1]['maxDay'] = $currentDay;
-          } else {
-            // Iniciar un nuevo grupo de días
-            $dayGroup = [
-              'minDay' => $currentDay,
-              'maxDay' => $currentDay,
-              'openHour' => $openHour,
-              'closeHour' => $closeHour,
-            ];
-            $groupedDays[] = $dayGroup;
-          }
+        if ($dayGroup == null) {
+          $dayGroup = [
+            'minDay' => $currentDay,
+            'maxDay' => $currentDay,
+            'openHour' => $openHour,
+            'closeHour' => $closeHour,
+          ];
+        } elseif ($openHour == $dayGroup['openHour'] && $closeHour == $dayGroup['closeHour'] && $currentDay == ($dayGroup['maxDay'] + 1)) {
+          $dayGroup['maxDay'] = $currentDay;
+        } else {
+          $groupedDays[] = $dayGroup;
+          $dayGroup = [
+            'minDay' => $currentDay,
+            'maxDay' => $currentDay,
+            'openHour' => $openHour,
+            'closeHour' => $closeHour,
+          ];
         }
       }
+      if ($dayGroup != null) {
+        $groupedDays[] = $dayGroup;
+      }
     }
+
+    usort($groupedDays, function ($a, $b) {
+      return $a['minDay'] - $b['minDay'];
+    });
+
     $dayTranslations = [
       '1' => trans('ischedulable::common.day.monday'),
       '2' => trans('ischedulable::common.day.tuesday'),
@@ -80,7 +92,6 @@ class Schedule extends Component
       '7' => trans('ischedulable::common.day.sunday'),
     ];
 
-    // Actualizar los valores de días en $groupedDays utilizando el array auxiliar
     foreach ($groupedDays as &$days) {
       $days['minDay'] = $dayTranslations[$days['minDay']];
       $days['maxDay'] = $dayTranslations[$days['maxDay']];
