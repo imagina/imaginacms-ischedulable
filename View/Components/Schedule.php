@@ -18,6 +18,11 @@ class Schedule extends Component
   public $withTitle;
   public $withDescription;
   public $groupDays;
+  public $withIcon;
+  public $icon;
+  public $colorIcon;
+  public $colorNameDay;
+  public $colorHours;
 
   /**
    * Create a new component instance.
@@ -27,7 +32,8 @@ class Schedule extends Component
   public function __construct($view = null, $layout = 'schedule-layout-1', $item = null, $groupDays = true,
                               $formatHour = null, $symbolToUniteDays = 'a', $symbolToUniteHours = 'a',
                               $title = 'Horarios De Atención', $description = null, $withTitle = false,
-                              $withDescription = false)
+                              $withDescription = false, $withIcon = false, $icon = "fa-regular fa-clock",
+                              $colorIcon = '', $colorNameDay = '', $colorHours = '')
   {
     $this->item = $item ?? json_decode(setting('ischedulable::siteSchedule')) ?? [];
     $this->item->workTimes = (collect($this->item->workTimes));
@@ -42,6 +48,11 @@ class Schedule extends Component
     $this->withTitle = $withTitle;
     $this->withDescription = $withDescription;
     $this->groupDays = $groupDays;
+    $this->withIcon = $withIcon;
+    $this->icon = $icon;
+    $this->colorIcon = $colorIcon;
+    $this->colorNameDay = $colorNameDay;
+    $this->colorHours = $colorHours;
 
     $groupedDays = [];
     $dayGroup = null;
