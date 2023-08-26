@@ -16,13 +16,20 @@
           @foreach($groupSchedule as $schedule)
             <div class="schedule-day">
               <div class="day-schedule text-center">
+                @if($withIcon)
+                  <i class="{{$icon}} {{$colorIcon}}"></i>
+                @endif
                 @if($schedule['minDay'] == $schedule['maxDay'])
-                  {{$schedule['minDay']}}
+                  <p class="name-day {{$colorNameDay}}">
+                    {{$schedule['minDay']}}
+                  </p>
                 @else
-                  {{$schedule["minDay"]." ".$symbolToUniteDays." ".$schedule["maxDay"]}}
+                  <p class="name-day {{$colorNameDay}}">
+                    {{$schedule["minDay"]." ".$symbolToUniteDays." ".$schedule["maxDay"]}}
+                  </p>
                 @endif
               </div>
-              <div class="hours-schedule text-center pb-2">
+              <div class="hours-schedule {{$colorHours}} text-center pb-2">
                 {{$schedule['openHour']." ".$symbolToUniteHours." ".$schedule['closeHour']}}
               </div>
             </div>
