@@ -36,7 +36,7 @@ class Schedule extends Component
                               $colorIcon = '', $colorNameDay = '', $colorHours = '')
   {
     $this->item = $item ?? json_decode(setting('ischedulable::siteSchedule')) ?? [];
-    $this->item->workTimes = (collect($this->item->workTimes));
+    $this->item->workTimes = (collect($this->item->workTimes ?? $this->item->work_times));
     $this->item->workTimes = $this->item->workTimes->sortBy("dayId");
     $this->layout = $layout;
     $this->view = $view ?? "ischedulable::frontend.components.schedule.layouts.{$this->layout}.index";
@@ -59,11 +59,11 @@ class Schedule extends Component
 
     if (isset($this->item->workTimes)) {
       foreach ($this->item->workTimes as $day) {
-        $dateOpen = strtotime($day->startTime);
+        $dateOpen = strtotime($day->startTime ?? $day->start_time);
         $openHour = date($this->formatHour, $dateOpen);
-        $dateClose = strtotime($day->endTime);
+        $dateClose = strtotime($day->endTime ?? $day->end_time);
         $closeHour = date($this->formatHour, $dateClose);
-        $currentDay = $day->dayId;
+        $currentDay = $day->dayId ?? $day->day_id;
 
         if ($dayGroup == null) {
           $dayGroup = [
