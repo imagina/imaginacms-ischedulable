@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Blade;
 class IschedulableServiceProvider extends ServiceProvider
 {
     use CanPublishConfiguration;
+
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -22,10 +23,8 @@ class IschedulableServiceProvider extends ServiceProvider
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->registerBindings();
         $this->app['events']->listen(BuildingSidebar::class, RegisterIschedulableSidebar::class);
@@ -33,19 +32,16 @@ class IschedulableServiceProvider extends ServiceProvider
         $this->app['events']->listen(LoadingBackendTranslations::class, function (LoadingBackendTranslations $event) {
             // append translations
         });
-
-
     }
 
-    public function boot()
+    public function boot(): void
     {
-
         $this->publishConfig('ischedulable', 'config');
         $this->publishConfig('ischedulable', 'crud-fields');
 
-        $this->mergeConfigFrom($this->getModuleConfigFilePath('ischedulable', 'settings'), "asgard.ischedulable.settings");
-        $this->mergeConfigFrom($this->getModuleConfigFilePath('ischedulable', 'settings-fields'), "asgard.ischedulable.settings-fields");
-        $this->mergeConfigFrom($this->getModuleConfigFilePath('ischedulable', 'permissions'), "asgard.ischedulable.permissions");
+        $this->mergeConfigFrom($this->getModuleConfigFilePath('ischedulable', 'settings'), 'asgard.ischedulable.settings');
+        $this->mergeConfigFrom($this->getModuleConfigFilePath('ischedulable', 'settings-fields'), 'asgard.ischedulable.settings-fields');
+        $this->mergeConfigFrom($this->getModuleConfigFilePath('ischedulable', 'permissions'), 'asgard.ischedulable.permissions');
 
         //$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
@@ -54,12 +50,10 @@ class IschedulableServiceProvider extends ServiceProvider
 
     /**
      * Get the services provided by the provider.
-     *
-     * @return array
      */
-    public function provides()
+    public function provides(): array
     {
-        return array();
+        return [];
     }
 
     private function registerBindings()
@@ -100,11 +94,7 @@ class IschedulableServiceProvider extends ServiceProvider
                 return new \Modules\Ischedulable\Repositories\Cache\CacheWorkTimeDecorator($repository);
             }
         );
-// add bindings
-
-
-
-
+        // add bindings
     }
 
   /**
