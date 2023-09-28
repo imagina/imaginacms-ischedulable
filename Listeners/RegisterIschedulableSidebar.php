@@ -16,8 +16,6 @@ class RegisterIschedulableSidebar implements \Maatwebsite\Sidebar\SidebarExtende
     protected $auth;
 
     /**
-     * @param Authentication $auth
-     *
      * @internal param Guard $guard
      */
     public function __construct(Authentication $auth)
@@ -30,10 +28,6 @@ class RegisterIschedulableSidebar implements \Maatwebsite\Sidebar\SidebarExtende
         $sidebar->add($this->extendWith($sidebar->getMenu()));
     }
 
-    /**
-     * @param Menu $menu
-     * @return Menu
-     */
     public function extendWith(Menu $menu)
     {
         $menu->group(trans('core::sidebar.content'), function (Group $group) {
@@ -41,9 +35,9 @@ class RegisterIschedulableSidebar implements \Maatwebsite\Sidebar\SidebarExtende
                 $item->icon('fa fa-copy');
                 $item->weight(10);
                 $item->authorize(
-                     /* append */
+                    /* append */
                 );
-// append
+                // append
             });
         });
 
