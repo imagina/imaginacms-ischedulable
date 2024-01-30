@@ -12,25 +12,37 @@
       {{$description}}
     </div>
   @endif
-  @if (!is_null($groupSchedule))
-    @foreach($groupSchedule as $schedule)
+  @if (!empty($groupSchedule))
+    @php
+      $previousGroupTitle = '';
+    @endphp
+    @foreach($groupSchedule as $days)
       <div class="schedule-day">
         <div class="day-schedule text-center">
           @if($withIcon)
             <i class="{{$icon}} {{$colorIcon}}"></i>
           @endif
-          @if($schedule['minDay'] == $schedule['maxDay'])
-            <p class="name-day {{$colorNameDay}}">
-              {{$schedule['minDay']}}
-            </p>
-          @else
-            <p class="name-day {{$colorNameDay}}">
-              {{$schedule["minDay"]." ".$symbolToUniteDays." ".$schedule["maxDay"]}}
-            </p>
-          @endif
+          <p class="name-day {{$colorNameDay}}">
+            @if(count($days['days']) > 1)
+              @php
+                $groupTitle = reset($days['days'])." - ".end($days['days']);
+                if ($groupTitle !== $previousGroupTitle) {
+                    echo $groupTitle;
+                    $previousGroupTitle = $groupTitle;
+                }
+              @endphp
+            @else
+              {{ reset($days['days']) }}
+            @endif
+          </p>
         </div>
         <div class="hours-schedule {{$colorHours}} text-center pb-2">
-          {{$schedule['openHour']." ".$symbolToUniteHours." ".$schedule['closeHour']}}
+          @foreach ($days['openHours'] as $index => $openHour)
+            @if ($index > 0)
+              -
+            @endif
+            {{$openHour." ".$symbolToUniteHours." ".$days['closeHours'][$index]}}
+          @endforeach
         </div>
       </div>
     @endforeach
