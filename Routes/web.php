@@ -14,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('ischedulable')->group(function () {
-    Route::get('/', [IschedulableController::class, 'index']);
+Route::prefix('ischedulable')->group(function() {
+    Route::get('/', 'IschedulableController@index');
 });
