@@ -9,6 +9,7 @@ return [
     'friday' => 'Viernes',
     'saturday' => 'Sábado',
     'sunday' => 'Domingo',
+    'sundayAndHolidays' => 'Domingos y Festivos',
   ],
   'settings' => [
     'groupName' => 'Horario del Sitio',
