@@ -16,14 +16,14 @@
     @php
       $previousGroupTitle = '';
     @endphp
-    @foreach($groupSchedule as $days)
+    @foreach($groupSchedule as $key => $days)
       <div class="schedule-day">
         <div class="day-schedule text-center">
           @if($withIcon)
             <i class="{{$icon}} {{$colorIcon}}"></i>
           @endif
-          <p class="name-day {{$colorNameDay}}">
-            @if(count($days['days']) > 1)
+          @if(count($days['days']) > 1)
+            <p class="name-day {{$colorNameDay}}">
               @php
                 $groupTitle = reset($days['days'])." - ".end($days['days']);
                 if ($groupTitle !== $previousGroupTitle) {
@@ -31,10 +31,19 @@
                     $previousGroupTitle = $groupTitle;
                 }
               @endphp
-            @else
-              {{ reset($days['days']) }}
+            </p>
+          @else
+            @php
+              static $previousDay = null;
+              $currentDay = reset($days['days']);
+            @endphp
+            @if( isset($groupSchedule[$key]) && $groupSchedule[$key] !== $currentDay && $currentDay !== $previousDay )
+              <p class="name-day {{$colorNameDay}}">
+                {{ $currentDay }}
+              </p>
             @endif
-          </p>
+            @php($previousDay = $currentDay)
+          @endif
         </div>
         <div class="hours-schedule {{$colorHours}} text-center pb-2">
           @foreach ($days['openHours'] as $index => $openHour)
