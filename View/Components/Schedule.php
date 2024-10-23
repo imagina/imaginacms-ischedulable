@@ -77,16 +77,17 @@ class Schedule extends Component
 
         $foundGroup = false;
 
-        foreach ($groupedDays as &$existingGroup) {
-          if (in_array($openHour, $existingGroup['openHours']) && in_array($closeHour, $existingGroup['closeHours'])) {
-            $foundGroup = true;
-            if (!in_array($currentDay, $existingGroup['days'])) {
-              $existingGroup['days'][] = $currentDay;
+        if ($groupDays) {
+          foreach ($groupedDays as &$existingGroup) {
+            if (in_array($openHour, $existingGroup['openHours']) && in_array($closeHour, $existingGroup['closeHours'])) {
+              $foundGroup = true;
+              if (!in_array($currentDay, $existingGroup['days'])) {
+                $existingGroup['days'][] = $currentDay;
+              }
+              break;
             }
-            break;
           }
         }
-
         if (!$foundGroup) {
           $groupedDays[] = [
             'days' => [$currentDay],
